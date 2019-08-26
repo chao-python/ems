@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>regist</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+        <script>
+            function checkName() {
+                uname = document.getElementsByName('username')[0].value;
+                url ="{% url 'logregapp:checkname' %}";
+
+                var xhr;
+                if (window.ActiveXObject )
+                {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP")
+                }else if(window.XMLHttpRequest)
+                {
+                    xhr = new XMLHttpRequest()
+                }
+                xhr.open('post',url,true);
+                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xhr.setRequestHeader("X-CSRFToken","{{ csrf_token }}");
+                xhr.send('username='+uname);
+
+                document.getElementById("msg").src = '/static/img/loading.gif';
+
+                xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200){
+                    console.log(xhr.responseText);
+                    document.getElementById("msg").src = xhr.responseText;
+                }
+            }
+            }
+            function checkPassword() {
+                upwd1 = document.getElementsByName('userpwd1')[0].value;
+                upwd2 = document.getElementsByName('userpwd2')[0].value;
+                url = "{% url 'logregapp:checkpwd' %}";
+
+                var xhr;
+                if (window.ActiveXObject )
+                {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP")
+                }else if(window.XMLHttpRequest)
+                {
+                    xhr = new XMLHttpRequest()
+                }
+                xhr.open('post',url,true);
+                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xhr.setRequestHeader("X-CSRFToken","{{ csrf_token }}");
+                xhr.send('pwd1='+upwd1+'&pwd2='+upwd2);
+
+                document.getElementById("msg1").src = '/static/img/loading.gif';
+
+                xhr.onreadystatechange = function () {
+                console.log(xhr.readyState);
+                if (xhr.readyState == 4 && xhr.status == 200){
+                    console.log(xhr.responseText);
+                    document.getElementById("msg1").src = '';
+                    document.getElementById('msg2').innerHTML = xhr.responseText;
+                }
+            }
+            }
+            function checkcap() {
+                cap = document.getElementsByName('captcha')[0].value;
+                url ="{% url 'logregapp:checkpcap' %}";
+
+                var xhr;
+                if (window.ActiveXObject )
+                {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP")
+                }else if(window.XMLHttpRequest)
+                {
+                    xhr = new XMLHttpRequest()
+                }
+                xhr.open('post',url,true);
+                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xhr.setRequestHeader("X-CSRFToken","{{ csrf_token }}");
+                xhr.send('captcha='+cap);
+
+                document.getElementById("img2").src = '/static/img/loading.gif';
+
+                xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200){
+                    console.log(xhr.responseText);
+                    document.getElementById('img2').src = '';
+                    document.getElementById('msg4').innerHTML = xhr.responseText;
+                }
+            }
+            }
+        </script>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="top_content">
+					<div id="header">
+						<div id="rightheader">
+							<p>
+								2019/06/28
+								<br />
+							</p>
+						</div>
+						<div id="topheader">
+							<h1 id="title">
+								<a href="#">main</a>
+							</h1>
+						</div>
+						<div id="navigation">
+						</div>
+					</div>
+				<div id="content">
+					<p id="whereami">
+					</p>
+					<h1>
+						注册
+					</h1>
+					<form action="{% url 'logregapp:registlogic' %}" method="post">
+                        {% csrf_token %}
+						<table cellpadding="0" cellspacing="0" border="0"
+							class="form_table">
+							<tr>
+								<td valign="middle" align="right">
+									用户名:
+								</td>
+								<td valign="middle" align="left">
+									<input type="text" class="inputgri" name="username" onblur="checkName()"/>
+                                    <img src="" alt="" id="msg" height="20">
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									密码：
+								</td>
+								<td valign="middle" align="left">
+									<input type="password" class="inputgri" name="userpwd1" />
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									确认密码:
+								</td>
+								<td valign="middle" align="left">
+									<input type="password" class="inputgri" name="userpwd2" onblur="checkPassword()"/>
+                                    <img src="" alt="" id="msg1">
+                                    <span id="msg2"></span>
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									验证码:
+									<img id="num" src="{% url 'logregapp:getcaptcha' %}" width="60px"/>
+									<a href="javascript:void (0)" onclick="document.getElementById('num').src = '{% url "logregapp:getcaptcha" %}?'+(new Date()).getTime()">换一张</a>
+								</td>
+								<td valign="middle" align="left">
+									<input type="text" class="inputgri" name="captcha" onblur="checkcap()"/>
+                                    <img src="" alt="" id="img2">
+                                    <span id="msg4"></span>
+								</td>
+							</tr>
+						</table>
+						<p>
+							<input type="submit" class="button" value="Submit &raquo;" />
+						</p>
+					</form>
+				</div>
+			</div>
+			<div id="footer">
+				<div id="footer_bg">
+				ABC@126.com
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

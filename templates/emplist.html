@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>emplist</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+	<style>
+    .a{
+        width:20px;
+        height: 20px;
+        border:1px solid #e1e2e3;
+        cursor:pointer;
+        display: inline-block;
+        text-align: center;
+        line-height: 20px;
+    }
+    .b{
+        border:0;
+        width:20px;
+        height: 20px;
+        cursor:pointer;
+        display: inline-block;
+        text-align: center;
+        line-height: 20px;
+    }
+    a{
+        text-decoration:none;
+    }
+</style>
+    </head>
+	<body>
+    {% extends 'base.html' %}
+    {% block content %}
+		<div id="wrap">
+			<div id="top_content"> 
+				<div id="header">
+					<div id="rightheader">
+						<p>
+							2019/06/28
+							<br />
+						</p>
+					</div>
+					<div id="topheader">
+						<h1 id="title">
+							<a href="#">main</a>
+						</h1>
+					</div>
+					<div id="navigation">
+					</div>
+				</div>
+				<div id="content">
+					<p id="whereami">
+					</p>
+					<h1>
+						Welcome!
+					</h1>
+					<table class="table">
+						<tr class="table_header">
+							<td>
+								ID
+							</td>
+                            <td>
+                                Headpic
+                            </td>
+							<td>
+								Name
+							</td>
+							<td>
+								Salary
+							</td>
+							<td>
+								Age
+							</td>
+							<td>
+								Operation
+							</td>
+						</tr>
+                        {% for user in ems.object_list %}
+                            <tr class="row2">
+                                <td>{{ user.id }}</td>
+                                <td><img src="/static/{{ user.headpic }}" height="80px"></td>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.salary }}</td>
+                                <td>{{ user.age }}</td>
+                                <td><a href="{% url 'emsapp:delete' %}?id={{ user.id }}&number={{ ems.number }}">delete emp</a>
+                                    &nbsp;<a href="{% url 'emsapp:update' %}?id={{ user.id }}&number={{ ems.number }}">update emp</a></td>
+                            </tr>
+                        {% endfor %}
+                    
+					</table>
+                    {% if ems.has_previous %}
+                        <a href="{% url 'emsapp:employee' %}?number={{ ems.previous_page_number }}">上一页</a>
+                    {% endif %}
+
+                    {% for page in ems.paginator.page_range %}
+                        {% if page == ems.number %}
+                        <a href="{% url 'emsapp:employee' %}?number={{ page }}" class="b">{{ page }}</a>
+                        {% else %}
+                        <a href="{% url 'emsapp:employee' %}?number={{ page }}" class="a">{{ page }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if ems.has_next %}
+                        <a href="{% url 'emsapp:employee' %}?number={{ ems.next_page_number }}">下一页</a>
+					{% endif %}
+                    <p>
+						<input type="button" class="button" value="Add Employee" onclick="location.href='{% url "emsapp:add" %}'"/>
+					</p>
+				</div>
+			</div>
+			<div id="footer">
+				<div id="footer_bg">
+				ABC@126.com
+				</div>
+			</div>
+		</div>
+    {% endblock %}
+	</body>
+</html>
